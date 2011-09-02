@@ -19,8 +19,9 @@ See example files
 
 ToDo:
 -----
-- add more plugins
+- add TTF font support
 - perhaps add Imagick animated GIF alternative to GIFEncoder if Imagick is faster/better
+- add more plugins
 
 Notes:
 ------
