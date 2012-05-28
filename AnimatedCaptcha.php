@@ -31,13 +31,13 @@ class AnimatedCaptcha
             $this->setOptions($options);
         }
 
-		 return;
+        return;
     }
 
-	 public function __destruct()
-	 {
-		return;
-	 }
+    public function __destruct()
+    {
+        return;
+    }
 
     /**
      * All given options in the array are given to their setters
@@ -91,17 +91,17 @@ class AnimatedCaptcha
      */
     public function outputRenderedImage()
     {
-		  if(!headers_sent()) {
-			  header('Cache-Control: private, no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0');
-			  header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-			  header('Last-Modified: '.gmdate('D, d M Y H:i:s',time()-60).' GMT');
-			  header('Pragma: no-cache');
-			  header('Content-Length: '.filesize($this->_tempFilePath));
-			  header('Content-Type: image/gif');
-		  }
-		  else {
-			  throw new Exception('Can not send header parameters. Thats already sent.');
-		  }
+        if(!headers_sent()) {
+            header('Cache-Control: private, no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0');
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: '.gmdate('D, d M Y H:i:s',time()-60).' GMT');
+            header('Pragma: no-cache');
+            header('Content-Length: '.filesize($this->_tempFilePath));
+            header('Content-Type: image/gif');
+        }
+        else {
+            throw new Exception('Can not send header parameters. Thats already sent.');
+        }
 
         readfile($this->_tempFilePath);
         return $this;
@@ -137,7 +137,7 @@ class AnimatedCaptcha
         $pluginClass = new $pluginClassName($this->_options['pluginOptions']);
         /** @var $pluginClass AnimatedCaptcha_Plugin */
         $this->_frames = $pluginClass->getFrames();
-		  return;
+        return;
     }
 
     /**
@@ -147,7 +147,7 @@ class AnimatedCaptcha
     {
         $tempFilePath = tempnam('', '') . '.gif';
         $this->_tempFilePath = $tempFilePath;
-		  return;
+        return;
     }
 
     /**
@@ -163,6 +163,6 @@ class AnimatedCaptcha
 
         $gif = new GIFEncoder($this->_frames, $delays, 0, 2, 0, 0, 0, 0, 'bin' );
         file_put_contents($this->_tempFilePath, $gif->GetAnimation());
-		  return;
+        return;
     }
 }
