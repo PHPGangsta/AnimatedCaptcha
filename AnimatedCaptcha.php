@@ -8,11 +8,10 @@
 class AnimatedCaptcha
 {
     protected $_options = array(
-        'millisecondsBetweenFrames' => 100,
-        'pluginName'                => 'MovingRectangle',
-        'pluginOptions'             => array()
-    );
-
+		'millisecondsBetweenFrames' => 100,
+		'pluginName'                => 'MovingRectangle',
+		'pluginOptions'             => array()
+										);
     /**
      * @var string
      */
@@ -31,7 +30,14 @@ class AnimatedCaptcha
         if (is_array($options)) {
             $this->setOptions($options);
         }
+
+		 return;
     }
+
+	 public function __destruct()
+	 {
+		return;
+	 }
 
     /**
      * All given options in the array are given to their setters
@@ -43,7 +49,6 @@ class AnimatedCaptcha
     {
         foreach ($options as $key => $value) {
             $normalized = ucfirst($key);
-
             $method = 'set' . $normalized;
             if (method_exists($this, $method)) {
                 $this->$method($value);
@@ -74,11 +79,8 @@ class AnimatedCaptcha
     public function render()
     {
         $this->_createTempFilePath();
-
         $this->_getFramesFromPlugin();
-
         $this->_writeFramesToTargetFile();
-
         return $this;
     }
 
@@ -89,15 +91,19 @@ class AnimatedCaptcha
      */
     public function outputRenderedImage()
     {
-        header('Cache-Control: private, no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0');
-        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-        header('Last-Modified: '.gmdate('D, d M Y H:i:s',time()-60).' GMT');
-        header('Pragma: no-cache');
-        header('Content-Length: '.filesize($this->_tempFilePath));
-        header('Content-Type: image/gif');
+		  if(!headers_sent()) {
+			  header('Cache-Control: private, no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0');
+			  header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+			  header('Last-Modified: '.gmdate('D, d M Y H:i:s',time()-60).' GMT');
+			  header('Pragma: no-cache');
+			  header('Content-Length: '.filesize($this->_tempFilePath));
+			  header('Content-Type: image/gif');
+		  }
+		  else {
+			  throw new Exception('Can not send header parameters. Thats already sent.');
+		  }
 
         readfile($this->_tempFilePath);
-
         return $this;
     }
 
@@ -126,12 +132,12 @@ class AnimatedCaptcha
 
     protected function _getFramesFromPlugin()
     {
-        require __DIR__ . '/plugins/'.$this->_options['pluginName'].'.php';
+        require (__DIR__ . '/plugins/'.$this->_options['pluginName'].'.php');
         $pluginClassName = 'AnimatedCaptcha_Plugin_'.$this->_options['pluginName'];
         $pluginClass = new $pluginClassName($this->_options['pluginOptions']);
         /** @var $pluginClass AnimatedCaptcha_Plugin */
-
         $this->_frames = $pluginClass->getFrames();
+		  return;
     }
 
     /**
@@ -140,8 +146,8 @@ class AnimatedCaptcha
     protected function _createTempFilePath()
     {
         $tempFilePath = tempnam('', '') . '.gif';
-
         $this->_tempFilePath = $tempFilePath;
+		  return;
     }
 
     /**
@@ -150,12 +156,13 @@ class AnimatedCaptcha
     protected function _writeFramesToTargetFile()
     {
         $delays = array();
+
         for ($i=0; $i<count($this->_frames); $i++) {
             $delays[] = $this->_options['millisecondsBetweenFrames'];
         }
 
-        $gif = new GIFEncoder($this->_frames, $delays, 0, 2, 0, 0, 0, 0, "bin" );
-
+        $gif = new GIFEncoder($this->_frames, $delays, 0, 2, 0, 0, 0, 0, 'bin' );
         file_put_contents($this->_tempFilePath, $gif->GetAnimation());
+		  return;
     }
 }
