@@ -239,11 +239,11 @@ Class GIFEncoder {
 					$GlobalBlock { 3 * $i + 1 } != $LocalBlock { 3 * $i + 1 } ||
 					$GlobalBlock { 3 * $i + 2 } != $LocalBlock { 3 * $i + 2 }
 				) {
-					return ( 0 );
+					return 0;
 			}
 		}
 
-		return ( 1 );
+		return 1;
 	}
 	/*
 	:::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -262,6 +262,6 @@ Class GIFEncoder {
 	::
 	*/
 	function GetAnimation ( ) {
-		return ( $this->GIF );
+		return $this->GIF;
 	}
 }
